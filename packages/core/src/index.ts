@@ -13,6 +13,8 @@ export {
   buildPublicUrl,
 } from "./signed-urls.js";
 
+export { buildDeliveryUrl } from "./url-builder.js";
+
 export { resolveMetadataTemplate } from "./metadata.js";
 
 export {

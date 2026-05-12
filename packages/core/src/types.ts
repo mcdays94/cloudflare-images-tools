@@ -53,10 +53,24 @@ export type AvifConversionFormat = "webp" | "jpeg" | "png";
 /**
  * An entry stored in the dedupe cache so we don't re-upload the same image
  * twice. The hash is the SHA-256 of the raw image buffer.
+ *
+ * `imageId` is the canonical Cloudflare image identifier (the `{imageId}`
+ * segment in `imagedelivery.net/{accountHash}/{imageId}/{variant}`). URLs are
+ * NOT cached because the variant and signing settings can change between the
+ * original upload and a future cache hit — instead, surfaces rebuild the URL
+ * fresh on each hit using `buildDeliveryUrl(imageId, variant, config)`.
+ *
+ * `url` is retained for backward compatibility with v0.2.1 cache entries that
+ * predate `imageId` and may be present in LocalStorage during a one-time
+ * migration window. Surfaces should prefer `imageId` and treat entries
+ * without it as cache misses (with optional best-effort recovery via
+ * `extractImageIdFromUrl(url)`).
  */
 export interface ImageCacheEntry {
   hash: string;
-  url: string;
+  imageId: string;
+  /** Deprecated since v0.2.2 — kept for migration of legacy entries. */
+  url?: string;
   fileName: string;
   uploadedAt: number;
 }

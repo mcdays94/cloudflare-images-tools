@@ -6,6 +6,7 @@ import {
   showHUD,
   showToast,
   Toast,
+  type LaunchProps,
 } from "@raycast/api";
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
@@ -15,9 +16,11 @@ import { tmpdir } from "node:os";
 import * as fs from "node:fs";
 
 import {
+  buildDeliveryUrl,
   calculateFileHash,
   formatImageUrl,
   uploadImage,
+  type OutputFormat,
 } from "@mcdays94/cloudflare-images-core";
 import {
   buildCloudflareConfig,
@@ -57,8 +60,23 @@ const execAsync = promisify(exec);
  *   - No image on clipboard → toast with hint
  *   - Network / CF error → toast with the error message
  */
-export default async function UploadClipboardCommand() {
+/**
+ * Argument shape from the manifest's `arguments` entry. The dropdown's first
+ * option ("Use my preference") yields the sentinel value "preference"; the
+ * rest map 1:1 to OutputFormat values.
+ */
+type FormatArg = "preference" | OutputFormat;
+
+export default async function UploadClipboardCommand(
+  props: LaunchProps<{ arguments: { format?: FormatArg } }>,
+) {
   const prefs = getPreferences();
+  // Effective format: explicit dropdown override > preference > "markdown".
+  const argFormat = props.arguments?.format;
+  const effectiveFormat: OutputFormat =
+    argFormat && argFormat !== "preference"
+      ? argFormat
+      : prefs.outputFormat;
 
   // 1. Credentials check — bail before closing the window so the toast is visible.
   const missing = missingCredentials(prefs);
@@ -157,7 +175,29 @@ export default async function UploadClipboardCommand() {
       return;
     }
 
-    // 4. Dedupe.
+    // 4. Resolve the variant + signing key up front. We need both on the
+    // cache-hit path (to rebuild the URL with the *current* settings, not
+    // whatever was active at original upload time) and on the upload path.
+    const effectiveVariant = await getEffectiveDefaultVariant(prefs);
+    let signingKey = "";
+    if (prefs.useSignedUrls) {
+      try {
+        signingKey = await getCachedOrFetchSigningKey(
+          prefs.accountId,
+          prefs.apiToken,
+        );
+      } catch (err) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: "Couldn't fetch signing key",
+          message: err instanceof Error ? err.message : String(err),
+        });
+        return;
+      }
+    }
+    const config = buildCloudflareConfig(prefs, signingKey, effectiveVariant);
+
+    // 5. Dedupe.
     const buffer = fs.readFileSync(imagePath);
     const hash = calculateFileHash(buffer);
     const cached = await getCachedImage(hash);
@@ -166,35 +206,18 @@ export default async function UploadClipboardCommand() {
     let toast: Toast | null = null;
 
     if (cached) {
-      url = cached.url;
+      // Rebuild the URL fresh — the cached imageId is stable, but the
+      // variant or signing settings may have changed since this image was
+      // first uploaded.
+      url = buildDeliveryUrl(cached.imageId, effectiveVariant, config);
       await showToast({
         style: Toast.Style.Success,
         title: "Duplicate detected",
-        message: `Reusing existing URL for ${cached.fileName}`,
+        message: `Reusing ${cached.fileName} (variant: ${effectiveVariant})`,
       });
     } else {
-      // 5. Build config (with signing key if needed) + upload.
-      let signingKey = "";
-      if (prefs.useSignedUrls) {
-        try {
-          signingKey = await getCachedOrFetchSigningKey(
-            prefs.accountId,
-            prefs.apiToken,
-          );
-        } catch (err) {
-          await showToast({
-            style: Toast.Style.Failure,
-            title: "Couldn't fetch signing key",
-            message: err instanceof Error ? err.message : String(err),
-          });
-          return;
-        }
-      }
-
-      const effectiveVariant = await getEffectiveDefaultVariant(prefs);
-      const config = buildCloudflareConfig(prefs, signingKey, effectiveVariant);
+      // 6. Upload.
       const compression = buildCompressionConfig(prefs);
-
       toast = await showToast({
         style: Toast.Style.Animated,
         title: "Uploading to Cloudflare Images…",
@@ -232,22 +255,25 @@ export default async function UploadClipboardCommand() {
       });
 
       url = outcome.url;
-      await addImageToCache(hash, url, fileName);
+      // Cache the imageId, not the URL — the URL is reconstructed fresh on
+      // every cache hit from the imageId + current effective variant.
+      await addImageToCache(hash, outcome.imageId, fileName);
       await toast.hide();
       toast = null;
     }
 
-    // 6. Format per output preference.
-    const formatted = formatImageUrl(url, fileName, prefs.outputFormat);
+    // 7. Format per the effective output format (argument override or
+    // preference fallback).
+    const formatted = formatImageUrl(url, fileName, effectiveFormat);
 
-    // 7. Paste at cursor in the previously-focused app. Clipboard.paste also
+    // 8. Paste at cursor in the previously-focused app. Clipboard.paste also
     // copies, so the formatted string ends up on the clipboard regardless of
     // where the paste lands.
     await Clipboard.paste(formatted);
 
-    // 8. HUD confirmation. Raycast shows HUDs as a small bezel even after the
+    // 9. HUD confirmation. Raycast shows HUDs as a small bezel even after the
     // window is closed.
-    await showHUD(`✓ ${humanFormatLabel(prefs.outputFormat)} pasted from Cloudflare Images`);
+    await showHUD(`✓ ${humanFormatLabel(effectiveFormat)} pasted from Cloudflare Images`);
   } catch (err) {
     await showToast({
       style: Toast.Style.Failure,

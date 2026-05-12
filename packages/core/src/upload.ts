@@ -6,7 +6,7 @@ import {
   type CompressionResult,
 } from "./compress.js";
 import { resolveMetadataTemplate } from "./metadata.js";
-import { buildPublicUrl, generateSignedUrl } from "./signed-urls.js";
+import { buildDeliveryUrl } from "./url-builder.js";
 import type {
   AvifConversionFormat,
   CloudflareConfig,
@@ -218,13 +218,11 @@ export async function uploadImage(
       );
     }
 
-    const url = options.config.useSignedUrls
-      ? generateSignedUrl(imageId, options.config.defaultVariant, options.config)
-      : buildPublicUrl(
-          imageId,
-          options.config.defaultVariant,
-          options.config.accountHash,
-        );
+    const url = buildDeliveryUrl(
+      imageId,
+      options.config.defaultVariant,
+      options.config,
+    );
 
     return {
       imageId,

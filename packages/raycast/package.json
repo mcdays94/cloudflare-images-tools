@@ -31,8 +31,22 @@
       "name": "upload-clipboard",
       "title": "Upload Clipboard Image",
       "subtitle": "Cloudflare Images",
-      "description": "Reads the image currently on your clipboard, uploads it to Cloudflare Images, and copies the formatted URL back.",
-      "mode": "no-view"
+      "description": "Reads the image currently on your clipboard, uploads it to Cloudflare Images, and pastes the formatted URL at the cursor. Pass an optional output format (Markdown, HTML, or Raw URL) at the dropdown to override your preference for this invocation.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "format",
+          "type": "dropdown",
+          "placeholder": "Output format",
+          "required": false,
+          "data": [
+            { "title": "Use my preference", "value": "preference" },
+            { "title": "Markdown", "value": "markdown" },
+            { "title": "HTML", "value": "html" },
+            { "title": "Raw URL", "value": "raw" }
+          ]
+        }
+      ]
     },
     {
       "name": "upload-finder",

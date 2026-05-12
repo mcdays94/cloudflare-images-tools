@@ -9,10 +9,10 @@ import {
 import * as fs from "node:fs";
 
 import {
+  buildDeliveryUrl,
   calculateFileHash,
   formatImageUrl,
   uploadImage,
-  type UploadOutcome,
 } from "@mcdays94/cloudflare-images-core";
 import {
   buildCloudflareConfig,
@@ -103,13 +103,14 @@ export default async function UploadFinderCommand() {
     const hash = calculateFileHash(buffer);
     const cached = await getCachedImage(hash);
 
-    let outcome: Pick<UploadOutcome, "url"> & { fromCache: boolean };
+    let url: string;
 
     if (cached) {
-      outcome = { url: cached.url, fromCache: true };
+      // Rebuild URL with current variant settings; cached imageId is stable.
+      url = buildDeliveryUrl(cached.imageId, effectiveVariant, config);
       await showToast({
         style: Toast.Style.Success,
-        title: "Duplicate detected — reusing existing URL",
+        title: "Duplicate detected — reusing existing image",
       });
     } else {
       const toast = await showToast({
@@ -141,12 +142,12 @@ export default async function UploadFinderCommand() {
         },
       });
 
-      await addImageToCache(hash, result.url, fileName);
-      outcome = { url: result.url, fromCache: false };
+      await addImageToCache(hash, result.imageId, fileName);
+      url = result.url;
       toast.hide();
     }
 
-    const formatted = formatImageUrl(outcome.url, fileName, prefs.outputFormat);
+    const formatted = formatImageUrl(url, fileName, prefs.outputFormat);
     await Clipboard.copy(formatted);
     await showHUD(`✓ ${fileName} → clipboard (${prefs.outputFormat})`);
   } catch (err) {
