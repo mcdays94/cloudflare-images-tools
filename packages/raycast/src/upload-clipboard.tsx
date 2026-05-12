@@ -224,7 +224,11 @@ export default async function UploadClipboardCommand(
       });
 
       const outcome = await uploadImage({
-        source: { type: "file", path: imagePath },
+        // Explicit fileName here so the friendly name (timestamp-based for
+        // clipboard pastes, original basename for Finder file refs) lands
+        // in Cloudflare instead of the UUID-suffixed temp filename used
+        // for raw-clipboard dumps.
+        source: { type: "file", path: imagePath, fileName },
         config,
         compressionConfig: compression,
         avifConversionFormat: prefs.avifConversionFormat,

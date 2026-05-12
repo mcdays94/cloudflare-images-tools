@@ -119,7 +119,11 @@ export default async function UploadFinderCommand() {
       });
 
       const result = await uploadImage({
-        source: { type: "file", path: item.path },
+        // For Finder uploads `path.basename(item.path)` would already
+        // give the friendly name, but pass explicitly for consistency
+        // with upload-clipboard and to keep the metadata + form-data
+        // filename in sync.
+        source: { type: "file", path: item.path, fileName },
         config,
         compressionConfig: compression,
         avifConversionFormat: prefs.avifConversionFormat,

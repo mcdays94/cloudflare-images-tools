@@ -33,9 +33,19 @@ export type UploadProgressEvent =
     };
 
 export interface UploadImageOptions {
-  /** Where the image data comes from. Either a file path or an in-memory buffer. */
+  /**
+   * Where the image data comes from.
+   *
+   * For `type: "file"`, the optional `fileName` field overrides the value
+   * sent to Cloudflare in the multipart form data. Without it, we fall
+   * back to `path.basename(path)` — which is fine for user-selected
+   * files but produces ugly temp-file names when the caller wrote the
+   * file to disk solely to upload it (e.g. raw-clipboard-image handling).
+   *
+   * For `type: "buffer"`, `fileName` is required.
+   */
   source:
-    | { type: "file"; path: string }
+    | { type: "file"; path: string; fileName?: string }
     | { type: "buffer"; data: Buffer; fileName: string };
 
   /** Cloudflare config — account, token, hash, variant, signing settings. */
@@ -158,7 +168,7 @@ export async function uploadImage(
     const fileName =
       options.source.type === "buffer"
         ? options.source.fileName
-        : path.basename(options.source.path);
+        : (options.source.fileName ?? path.basename(options.source.path));
 
     const form = new FormData();
     const fileBuffer = fs.readFileSync(workingPath);
