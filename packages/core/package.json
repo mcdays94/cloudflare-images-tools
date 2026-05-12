@@ -33,6 +33,8 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "typecheck": "tsc --noEmit",
+    "test": "npm run test:smoke",
+    "test:smoke": "node scripts/smoke-test.mjs",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
