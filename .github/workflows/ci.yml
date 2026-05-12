@@ -1,0 +1,72 @@
+# CI for cloudflare-images-tools.
+#
+# Runs on every push to main and every pull request. Validates that the
+# monorepo builds end-to-end:
+#   - core package compiles (tsc)
+#   - core's pure-function smoke tests pass (35 deterministic checks)
+#   - raycast package typechecks (tsc --noEmit)
+#   - raycast extension bundles via `ray build` (catches manifest errors,
+#     missing entry points, and Raycast-API-level issues)
+#
+# What's NOT in here:
+#   - `npm run test:api` — that requires real Cloudflare credentials and
+#     would need GitHub repo secrets. Add it once the repo has secrets
+#     CF_ACCOUNT_ID, CF_API_TOKEN, CF_ACCOUNT_HASH configured.
+#   - `npm run lint` — ESLint isn't configured for the monorepo yet.
+#     Raycast's `ray build` runs its own lint pass internally.
+#   - Coverage report — smoke tests are deterministic, not coverage-tracked.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs on the same ref when a new push lands.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build & test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Cloudflare Workers, the Raycast API, and our smoke tests all
+        # work on Node 20+. Pinning to 22 (current LTS at time of
+        # writing) plus 24 (current Active) gives a forward-looking
+        # signal.
+        node: ["22", "24"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node ${{ matrix.node }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install workspace deps
+        run: npm ci
+
+      - name: Build core
+        run: npm run build --workspace=@mcdays94/cloudflare-images-core
+
+      - name: Core smoke tests
+        run: npm run test:smoke --workspace=@mcdays94/cloudflare-images-core
+
+      - name: Raycast typecheck
+        run: npm run typecheck --workspace=cloudflare-images
+
+      - name: Raycast bundle (ray build)
+        run: npx ray build
+        working-directory: packages/raycast
