@@ -2,6 +2,8 @@ import {
   Clipboard,
   closeMainWindow,
   getSelectedFinderItems,
+  launchCommand,
+  LaunchType,
   showHUD,
   showToast,
   Toast,
@@ -18,9 +20,11 @@ import {
   buildCloudflareConfig,
   buildCompressionConfig,
   getPreferences,
+  type CfImagesPreferences,
 } from "./lib/config.js";
 import { addImageToCache, getCachedImage } from "./lib/cache.js";
 import { getEffectiveDefaultVariant } from "./lib/variant.js";
+import { getCachedOrFetchSigningKey } from "./lib/signing-key.js";
 
 const IMAGE_EXTENSIONS = new Set([
   ".png",
@@ -38,32 +42,48 @@ const IMAGE_EXTENSIONS = new Set([
 ]);
 
 /**
- * Upload Selected File — V0.3 milestone in ROADMAP.md.
+ * Upload Selected File — V0.3.
  *
- * STATUS: stub. The skeleton handles single-item upload end-to-end; batch /
- * multi-selection support is sketched but commented out so you can decide
- * the UX (one paste per file? joined newlines? confirmation prompt?).
+ * Reads the Finder selection, filters to image files, uploads each one
+ * sequentially with per-file progress, and writes a newline-joined output to
+ * the clipboard for paste downstream.
  *
- * High-level flow:
- *   1. Ask Raycast for the currently-selected Finder items.
- *      Raycast handles the permission prompt the first time.
- *   2. Filter to image files (extension check).
- *   3. For each, hash → cache check → upload → format URL.
- *   4. Write the result(s) to clipboard.
+ * Sequential not parallel: keeps the progress toast linear and readable, and
+ * sidesteps cache races (two simultaneous uploads of identical bytes would
+ * both miss and both upload). For ~10 files this is plenty fast; if you want
+ * to upload hundreds at once, you probably want a CLI not Raycast.
+ *
+ * Failure mode is partial-tolerant: a single bad file (CF error, sharp
+ * compression edge case, etc.) doesn't kill the whole batch. Successes are
+ * still copied; failures are surfaced in a follow-up toast naming the
+ * affected files.
  */
 export default async function UploadFinderCommand() {
-  await closeMainWindow();
-
   const prefs = getPreferences();
-  const effectiveVariant = await getEffectiveDefaultVariant(prefs);
-  // TODO (v0.3 polish): mirror upload-clipboard's signing-key fetch when
-  // `prefs.useSignedUrls` is true. For now this stub passes an empty signing
-  // key, so signed URLs will produce broken HMACs in upload-finder.
-  const config = buildCloudflareConfig(prefs, "", effectiveVariant);
-  const compression = buildCompressionConfig(prefs);
 
-  // TODO: short-circuit if accountId / apiToken / accountHash are missing.
+  // Credentials check up front — bail before closing the window.
+  const missing = missingCredentials(prefs);
+  if (missing.length > 0) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: "Cloudflare credentials missing",
+      message: `Fill in ${missing.join(", ")} via ⌘ , — or run Validate Cloudflare Credentials.`,
+      primaryAction: {
+        title: "Run Validate Credentials",
+        onAction: async () => {
+          await launchCommand({
+            name: "validate-credentials",
+            type: LaunchType.UserInitiated,
+          });
+        },
+      },
+    });
+    return;
+  }
 
+  // Read the Finder selection BEFORE closing the Raycast window — once
+  // Raycast goes away, Finder loses focus and getSelectedFinderItems may
+  // return empty.
   let selection: Awaited<ReturnType<typeof getSelectedFinderItems>>;
   try {
     selection = await getSelectedFinderItems();
@@ -93,36 +113,65 @@ export default async function UploadFinderCommand() {
     return;
   }
 
-  // TODO (v0.3 polish): if imageItems.length > 1, decide on the batch UX
-  // — for now we upload the first item only so this stub is safe to run.
-  const item = imageItems[0]!;
-  const fileName = item.path.split("/").pop() ?? "image";
-
-  try {
-    const buffer = fs.readFileSync(item.path);
-    const hash = calculateFileHash(buffer);
-    const cached = await getCachedImage(hash);
-
-    let url: string;
-
-    if (cached) {
-      // Rebuild URL with current variant settings; cached imageId is stable.
-      url = buildDeliveryUrl(cached.imageId, effectiveVariant, config);
+  // Resolve variant + signing key up front so every file uses the same
+  // current settings.
+  const effectiveVariant = await getEffectiveDefaultVariant(prefs);
+  let signingKey = "";
+  if (prefs.useSignedUrls) {
+    try {
+      signingKey = await getCachedOrFetchSigningKey(
+        prefs.accountId,
+        prefs.apiToken,
+      );
+    } catch (err) {
       await showToast({
-        style: Toast.Style.Success,
-        title: "Duplicate detected — reusing existing image",
+        style: Toast.Style.Failure,
+        title: "Couldn't fetch signing key",
+        message: err instanceof Error ? err.message : String(err),
       });
-    } else {
-      const toast = await showToast({
-        style: Toast.Style.Animated,
-        title: `Uploading ${fileName}…`,
-      });
+      return;
+    }
+  }
+  const config = buildCloudflareConfig(prefs, signingKey, effectiveVariant);
+  const compression = buildCompressionConfig(prefs);
+
+  await closeMainWindow();
+
+  const total = imageItems.length;
+  const toast = await showToast({
+    style: Toast.Style.Animated,
+    title: total === 1 ? "Uploading…" : `Uploading 0/${total}…`,
+  });
+
+  type Success = { fileName: string; url: string; fromCache: boolean };
+  type Failure = { fileName: string; error: string };
+  const successes: Success[] = [];
+  const failures: Failure[] = [];
+
+  for (let i = 0; i < imageItems.length; i++) {
+    const item = imageItems[i]!;
+    const fileName = item.path.split("/").pop() ?? "image";
+    toast.title =
+      total === 1
+        ? `Uploading ${fileName}…`
+        : `Uploading ${i + 1}/${total}: ${fileName}`;
+    toast.message = undefined;
+
+    try {
+      const buffer = fs.readFileSync(item.path);
+      const hash = calculateFileHash(buffer);
+      const cached = await getCachedImage(hash);
+
+      if (cached) {
+        // Rebuild URL with current variant/signing settings — cached imageId
+        // is stable, but variant + signing config may have changed since
+        // the original upload.
+        const url = buildDeliveryUrl(cached.imageId, effectiveVariant, config);
+        successes.push({ fileName, url, fromCache: true });
+        continue;
+      }
 
       const result = await uploadImage({
-        // For Finder uploads `path.basename(item.path)` would already
-        // give the friendly name, but pass explicitly for consistency
-        // with upload-clipboard and to keep the metadata + form-data
-        // filename in sync.
         source: { type: "file", path: item.path, fileName },
         config,
         compressionConfig: compression,
@@ -135,7 +184,7 @@ export default async function UploadFinderCommand() {
         metadataContext: {
           fileName,
           filePath: item.path,
-          surfaceVersion: "raycast-0.1.0",
+          surfaceVersion: "raycast-0.3.0",
         },
         onProgress: (event) => {
           if (event.type === "compressed") {
@@ -147,22 +196,72 @@ export default async function UploadFinderCommand() {
       });
 
       await addImageToCache(hash, result.imageId, fileName);
-      url = result.url;
-      toast.hide();
+      successes.push({ fileName, url: result.url, fromCache: false });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      failures.push({ fileName, error: message });
     }
+  }
 
-    const formatted = formatImageUrl(url, fileName, prefs.outputFormat);
-    await Clipboard.copy(formatted);
-    await showHUD(`✓ ${fileName} → clipboard (${prefs.outputFormat})`);
-  } catch (err) {
+  await toast.hide();
+
+  // ----- Reporting -----
+
+  if (successes.length === 0) {
     await showToast({
       style: Toast.Style.Failure,
-      title: `Failed to upload ${fileName}`,
-      message: err instanceof Error ? err.message : String(err),
+      title: total === 1 ? "Upload failed" : `All ${total} uploads failed`,
+      message:
+        total === 1
+          ? failures[0]?.error
+          : `${failures.map((f) => f.fileName).join(", ")}`,
+    });
+    return;
+  }
+
+  // Join formatted successes with newlines. Markdown and HTML both benefit
+  // from newline separation; for raw URLs, newline-separated is also the
+  // natural format.
+  const formatted = successes
+    .map((s) => formatImageUrl(s.url, s.fileName, prefs.outputFormat))
+    .join("\n");
+
+  await Clipboard.copy(formatted);
+
+  const cacheHits = successes.filter((s) => s.fromCache).length;
+  const cacheHitsNote =
+    cacheHits > 0 ? ` (${cacheHits} reused from dedupe cache)` : "";
+
+  if (failures.length === 0) {
+    if (total === 1) {
+      await showHUD(
+        `✓ ${successes[0]!.fileName} copied as ${prefs.outputFormat}`,
+      );
+    } else {
+      await showHUD(
+        `✓ ${successes.length} images copied as ${prefs.outputFormat}${cacheHitsNote}`,
+      );
+    }
+  } else {
+    // Partial success: copy still happened, but flag the failures.
+    await showToast({
+      style: Toast.Style.Failure,
+      title: `${successes.length}/${total} uploaded, ${failures.length} failed`,
+      message: `Failed: ${failures.map((f) => f.fileName).join(", ")}. Successes are on the clipboard.`,
     });
   }
 }
 
+function missingCredentials(prefs: CfImagesPreferences): string[] {
+  const missing: string[] = [];
+  if (!prefs.accountId?.trim()) missing.push("Account ID");
+  if (!prefs.apiToken?.trim()) missing.push("API Token");
+  if (!prefs.accountHash?.trim()) missing.push("Account Hash");
+  return missing;
+}
+
 function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
