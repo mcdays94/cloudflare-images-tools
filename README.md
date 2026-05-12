@@ -80,6 +80,27 @@ Open Raycast → "Validate Cloudflare Credentials" command should appear under
 token, and account hash via Raycast preferences. Then it pings the CF Images
 API and shows a success / failure toast.
 
+## Preferences are persisted by Raycast, not by us
+
+Once you fill them in once via `⌘ ,`, your **Account ID**, **API Token**, and
+**Account Hash** are stored by Raycast itself:
+
+- The `password`-type field (`apiToken`) lives in the **macOS Keychain**.
+- The other twelve preferences live in Raycast's **encrypted SQLite database**
+  at `~/Library/Application Support/com.raycast.macos/extensions/`.
+
+They survive `ray develop` restarts, Raycast app restarts, Mac reboots, and
+the future jump from dev to a published Raycast Store release. You don't need
+to re-enter them every time you rebuild.
+
+### ⚠️ The one footgun
+
+Raycast keys preferences off the **`name`** field in `packages/raycast/package.json`,
+which is `"cf-images"`. Do **not** rename it once you've installed the
+extension — if you do, Raycast treats it as a brand-new extension and your
+preferences reset to blank. Rename `title` freely (that's the human-facing
+display name); leave `name` alone forever.
+
 ## What's stubbed vs working in this initial scaffold
 
 | Piece | Status |
