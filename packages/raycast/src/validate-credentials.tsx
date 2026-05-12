@@ -74,7 +74,6 @@ export default function ValidateCredentialsCommand() {
           <Action
             title="Open CF Images Preferences"
             icon={Icon.Gear}
-            shortcut={{ modifiers: ["cmd"], key: "," }}
             onAction={openExtensionPreferences}
           />
           <Action.OpenInBrowser
