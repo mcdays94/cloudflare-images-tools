@@ -25,11 +25,13 @@ import {
   buildCloudflareConfig,
   buildCompressionConfig,
   getPreferences,
+  parseMetadataTemplate,
   type CfImagesPreferences,
 } from "./config.js";
 import { addImageToCache, getCachedImage } from "./cache.js";
-import { getCachedOrFetchSigningKey } from "./signing-key.js";
+import { getSigningKey } from "./signing-key.js";
 import { getEffectiveDefaultVariant } from "./variant.js";
+import { SURFACE_VERSION } from "./version.js";
 
 const execAsync = promisify(exec);
 
@@ -159,19 +161,21 @@ export async function runUploadClipboard(
     }
 
     // 4. Resolve variant + signing key up front (used by both cache-hit and
-    // upload paths).
+    // upload paths). Signing key honours the manualSigningKey preference
+    // override before falling back to LocalStorage cache / API auto-fetch.
     const effectiveVariant = await getEffectiveDefaultVariant(prefs);
     let signingKey = "";
     if (prefs.useSignedUrls) {
       try {
-        signingKey = await getCachedOrFetchSigningKey(
-          prefs.accountId,
-          prefs.apiToken,
-        );
+        signingKey = await getSigningKey({
+          accountId: prefs.accountId,
+          apiToken: prefs.apiToken,
+          manualOverride: prefs.manualSigningKey,
+        });
       } catch (err) {
         await showToast({
           style: Toast.Style.Failure,
-          title: "Couldn't fetch signing key",
+          title: "Couldn't resolve signing key",
           message: err instanceof Error ? err.message : String(err),
         });
         return;
@@ -202,21 +206,35 @@ export async function runUploadClipboard(
         title: "Uploading to Cloudflare Images…",
       });
 
+      // Metadata: respect `addMetadata` toggle; when on, parse the user's
+      // template (falling back to the default + a quiet toast on parse error).
+      let resolvedTemplate: Record<string, string> | undefined;
+      if (prefs.addMetadata) {
+        const parsed = parseMetadataTemplate(prefs.metadataTemplate);
+        if (parsed.parseError) {
+          // Don't block the upload — warn once and continue with default.
+          void showToast({
+            style: Toast.Style.Failure,
+            title: "Metadata template JSON invalid — using default",
+            message: parsed.errorMessage ?? "Check the JSON in preferences.",
+          });
+        }
+        resolvedTemplate = parsed.template;
+      }
+
       const outcome = await uploadImage({
         source: { type: "file", path: imagePath, fileName },
         config,
         compressionConfig: compression,
         avifConversionFormat: prefs.avifConversionFormat,
-        metadataTemplate: {
-          uploadedBy: "raycast-cloudflare-images",
-          uploadedAt: "${timestamp}",
-          fileName: "${fileName}",
-        },
-        metadataContext: {
-          fileName,
-          filePath: imagePath,
-          surfaceVersion: "raycast-0.3.0",
-        },
+        metadataTemplate: resolvedTemplate,
+        metadataContext: resolvedTemplate
+          ? {
+              fileName,
+              filePath: imagePath,
+              surfaceVersion: SURFACE_VERSION,
+            }
+          : undefined,
         onProgress: (event) => {
           if (!toast) return;
           if (event.type === "compressed") {

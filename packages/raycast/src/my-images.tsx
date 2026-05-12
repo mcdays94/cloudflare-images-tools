@@ -23,7 +23,7 @@ import {
 } from "@mcdays94/cloudflare-images-core";
 import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
 import { getEffectiveDefaultVariant } from "./lib/variant.js";
-import { getCachedOrFetchSigningKey } from "./lib/signing-key.js";
+import { getSigningKey } from "./lib/signing-key.js";
 
 /**
  * My Cloudflare Images — V0.4.
@@ -49,7 +49,8 @@ import { getCachedOrFetchSigningKey } from "./lib/signing-key.js";
  * Signed URL handling:
  *   - If ANY image in the response has `requireSignedURLs: true`, we
  *     proactively fetch (and cache) the signing key from
- *     `getCachedOrFetchSigningKey`. Per-image we then use either
+ *     `getSigningKey` (which honours the manualSigningKey preference
+ *     override). Per-image we then use either
  *     `generateSignedUrl` (signed image) or `buildPublicUrl` (everything
  *     else). If the signing-key fetch fails (token lacks Images Read
  *     permission, etc.), signed images still render but their thumbnails
@@ -93,10 +94,11 @@ export default function MyImagesCommand() {
         const anySigned = page.images.some((i) => i.requireSignedURLs);
         if (anySigned) {
           try {
-            const key = await getCachedOrFetchSigningKey(
-              prefs.accountId,
-              prefs.apiToken,
-            );
+            const key = await getSigningKey({
+              accountId: prefs.accountId,
+              apiToken: prefs.apiToken,
+              manualOverride: prefs.manualSigningKey,
+            });
             if (!cancelled) setSigningKey(key);
           } catch (err) {
             if (!cancelled) {

@@ -163,7 +163,7 @@
       "name": "useSignedUrls",
       "title": "Signed URLs",
       "label": "Generate signed URLs for new uploads",
-      "description": "Requires a signing key. The extension will fetch one automatically the first time it's needed.",
+      "description": "Requires a signing key. The extension fetches one automatically from the Cloudflare API the first time it's needed (and caches it). You can also override with a manual key below.",
       "type": "checkbox",
       "required": false,
       "default": false
@@ -176,6 +176,32 @@
       "required": false,
       "default": "0",
       "placeholder": "0"
+    },
+    {
+      "name": "manualSigningKey",
+      "title": "Manual Signing Key (optional)",
+      "description": "Optional override. If set, this value is used directly for HMAC signing and the auto-fetch from the Cloudflare API is skipped entirely. Leave blank to use the automatic flow — most users want that.",
+      "type": "password",
+      "required": false,
+      "placeholder": "Leave blank for auto-fetch"
+    },
+    {
+      "name": "addMetadata",
+      "title": "Attach Metadata to Uploads",
+      "label": "Tag each uploaded image with metadata",
+      "description": "When on, the JSON template below is rendered and attached to every upload, surfacing in the Cloudflare Images dashboard and in My Cloudflare Images. When off, images upload with no metadata.",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "metadataTemplate",
+      "title": "Metadata Template (JSON)",
+      "description": "JSON object of metadata key-value pairs. Dynamic placeholders: ${fileName}, ${timestamp} (ISO 8601), ${date} (YYYY-MM-DD), ${time} (HH:MM:SS), ${fileSize} (bytes), ${fileExtension}, ${surfaceVersion}, ${workspaceName}. Cloudflare caps total metadata at 1024 bytes after rendering. Leave blank to use the default. Invalid JSON silently falls back to the default with a toast warning.",
+      "type": "textfield",
+      "required": false,
+      "default": "{\"uploadedBy\":\"Raycast Extension: Cloudflare Images\",\"uploadedAt\":\"${timestamp}\",\"fileName\":\"${fileName}\",\"extensionVersion\":\"${surfaceVersion}\"}",
+      "placeholder": "{\"key\":\"value with ${fileName}\"}"
     },
     {
       "name": "enableCompression",
