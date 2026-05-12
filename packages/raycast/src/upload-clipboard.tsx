@@ -27,6 +27,7 @@ import {
 } from "./lib/config.js";
 import { addImageToCache, getCachedImage } from "./lib/cache.js";
 import { getCachedOrFetchSigningKey } from "./lib/signing-key.js";
+import { getEffectiveDefaultVariant } from "./lib/variant.js";
 
 const execAsync = promisify(exec);
 
@@ -190,7 +191,8 @@ export default async function UploadClipboardCommand() {
         }
       }
 
-      const config = buildCloudflareConfig(prefs, signingKey);
+      const effectiveVariant = await getEffectiveDefaultVariant(prefs);
+      const config = buildCloudflareConfig(prefs, signingKey, effectiveVariant);
       const compression = buildCompressionConfig(prefs);
 
       toast = await showToast({

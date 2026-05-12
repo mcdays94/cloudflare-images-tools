@@ -20,6 +20,7 @@ import {
   type CloudflareImage,
 } from "@mcdays94/cloudflare-images-core";
 import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
+import { getEffectiveDefaultVariant } from "./lib/variant.js";
 
 /**
  * My Cloudflare Images — V0.4 milestone in ROADMAP.md.
@@ -51,11 +52,21 @@ import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
  */
 export default function MyImagesCommand() {
   const prefs = getPreferences();
+  // `config.defaultVariant` is whatever the preferences textfield holds; it's
+  // overridden by the resolved effective variant below before we actually
+  // build any URLs. Kept here so accountId / apiToken / accountHash are
+  // available immediately for the list query without waiting on async.
   const config = buildCloudflareConfig(prefs);
 
   const [images, setImages] = useState<CloudflareImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reloadKey, setReloadKey] = useState(0);
+  // Resolved asynchronously from the variant precedence chain (stored →
+  // textfield → /public). Until it loads, fall back to the textfield value
+  // so the first render doesn't show 404 thumbnails.
+  const [effectiveVariant, setEffectiveVariant] = useState<string>(
+    prefs.defaultVariant || "/public",
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -63,12 +74,16 @@ export default function MyImagesCommand() {
     (async () => {
       setIsLoading(true);
       try {
-        const page = await listImages({
-          config: { accountId: config.accountId, apiToken: config.apiToken },
-          perPage: 100,
-        });
+        const [page, variant] = await Promise.all([
+          listImages({
+            config: { accountId: config.accountId, apiToken: config.apiToken },
+            perPage: 100,
+          }),
+          getEffectiveDefaultVariant(prefs),
+        ]);
         if (!cancelled) {
           setImages(page.images);
+          setEffectiveVariant(variant);
         }
       } catch (err) {
         await showToast({
@@ -91,8 +106,8 @@ export default function MyImagesCommand() {
       {images.map((image) => {
         const previewUrl = image.requireSignedURLs
           ? // TODO: build signed URL here once we have a signing key fetched
-            buildPublicUrl(image.id, prefs.defaultVariant, config.accountHash)
-          : buildPublicUrl(image.id, prefs.defaultVariant, config.accountHash);
+            buildPublicUrl(image.id, effectiveVariant, config.accountHash)
+          : buildPublicUrl(image.id, effectiveVariant, config.accountHash);
 
         return (
           <List.Item

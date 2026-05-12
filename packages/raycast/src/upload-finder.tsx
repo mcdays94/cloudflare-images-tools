@@ -20,6 +20,7 @@ import {
   getPreferences,
 } from "./lib/config.js";
 import { addImageToCache, getCachedImage } from "./lib/cache.js";
+import { getEffectiveDefaultVariant } from "./lib/variant.js";
 
 const IMAGE_EXTENSIONS = new Set([
   ".png",
@@ -54,7 +55,11 @@ export default async function UploadFinderCommand() {
   await closeMainWindow();
 
   const prefs = getPreferences();
-  const config = buildCloudflareConfig(prefs);
+  const effectiveVariant = await getEffectiveDefaultVariant(prefs);
+  // TODO (v0.3 polish): mirror upload-clipboard's signing-key fetch when
+  // `prefs.useSignedUrls` is true. For now this stub passes an empty signing
+  // key, so signed URLs will produce broken HMACs in upload-finder.
+  const config = buildCloudflareConfig(prefs, "", effectiveVariant);
   const compression = buildCompressionConfig(prefs);
 
   // TODO: short-circuit if accountId / apiToken / accountHash are missing.

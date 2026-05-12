@@ -139,8 +139,9 @@ function buildMarkdown(
       "",
       "## Next steps",
       "",
+      "- Run **Set Default Variant** to pick which variant (`/public`, `/hero`, etc.) gets appended to your URLs. Falls back to the Default Variant textfield in preferences if you skip this.",
       "- Try **Upload Clipboard Image** from Raycast's root search to upload a screenshot.",
-      "- Or open **My Cloudflare Images** to browse what's already in your account.",
+      "- Open **My Cloudflare Images** to browse what's already in your account.",
     ].join("\n");
   }
 

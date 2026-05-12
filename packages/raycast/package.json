@@ -47,6 +47,13 @@
       "subtitle": "Cloudflare Images",
       "description": "Browse, copy URLs from, and delete the images in your Cloudflare Images account.",
       "mode": "view"
+    },
+    {
+      "name": "set-default-variant",
+      "title": "Set Default Variant",
+      "subtitle": "Cloudflare Images",
+      "description": "Pick the default variant for new uploads and URL formatting from a list fetched from your Cloudflare Images account. Overrides the Default Variant textfield in preferences.",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -76,8 +83,8 @@
     },
     {
       "name": "defaultVariant",
-      "title": "Default Variant",
-      "description": "Variant to append to URLs. Conventionally /public.",
+      "title": "Default Variant (fallback)",
+      "description": "Variant appended to delivery URLs. Conventionally /public. Run 'Set Default Variant' to pick from a live list of your account's variants — that selection takes precedence over this textfield.",
       "type": "textfield",
       "required": false,
       "default": "/public",

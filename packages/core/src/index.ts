@@ -31,6 +31,14 @@ export type {
 export { listImages } from "./list.js";
 export type { ListImagesOptions } from "./list.js";
 
+export { listVariants } from "./variants.js";
+export type {
+  CloudflareVariant,
+  CloudflareVariantOptions,
+  VariantFit,
+  VariantMetadata,
+} from "./variants.js";
+
 export { deleteImage } from "./delete.js";
 
 export { validateCredentials } from "./validate.js";
