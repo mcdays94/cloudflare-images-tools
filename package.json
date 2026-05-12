@@ -1,0 +1,25 @@
+{
+  "name": "cf-images-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Monorepo for the CF Images family of tools: Raycast extension, MCP server, and shared TypeScript core. Unofficial.",
+  "author": "Miguel Caetano Dias <amtccdias@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcdays94/cf-images-tools"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
