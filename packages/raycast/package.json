@@ -49,10 +49,52 @@
       ]
     },
     {
+      "name": "upload-clipboard-markdown",
+      "title": "Upload Clipboard as Markdown",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads the clipboard image and pastes the URL as Markdown — ![filename](url) — regardless of your default output format. Bind a hotkey if you live in Markdown.",
+      "mode": "no-view"
+    },
+    {
+      "name": "upload-clipboard-html",
+      "title": "Upload Clipboard as HTML",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads the clipboard image and pastes an HTML <img> tag, regardless of your default output format.",
+      "mode": "no-view"
+    },
+    {
+      "name": "upload-clipboard-url",
+      "title": "Upload Clipboard as URL",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads the clipboard image and pastes only the raw URL — no Markdown or HTML wrapping — regardless of your default output format. The 'just give me the link' path for Slack, JSON fields, CSS, etc.",
+      "mode": "no-view"
+    },
+    {
       "name": "upload-finder",
       "title": "Upload Selected File",
       "subtitle": "Cloudflare Images",
-      "description": "Uploads the image currently selected in Finder to Cloudflare Images.",
+      "description": "Uploads the image(s) currently selected in Finder to Cloudflare Images. Multiple images are joined newline-separated and copied to the clipboard.",
+      "mode": "no-view"
+    },
+    {
+      "name": "upload-finder-markdown",
+      "title": "Upload Selected File as Markdown",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads selected Finder image(s) and copies the URL(s) as Markdown, regardless of your default output format.",
+      "mode": "no-view"
+    },
+    {
+      "name": "upload-finder-html",
+      "title": "Upload Selected File as HTML",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads selected Finder image(s) and copies HTML <img> tag(s), regardless of your default output format.",
+      "mode": "no-view"
+    },
+    {
+      "name": "upload-finder-url",
+      "title": "Upload Selected File as URL",
+      "subtitle": "Cloudflare Images",
+      "description": "Uploads selected Finder image(s) and copies only the raw URL(s), regardless of your default output format. The 'just give me the link' path for Finder uploads.",
       "mode": "no-view"
     },
     {
