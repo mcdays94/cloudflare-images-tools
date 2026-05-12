@@ -35,6 +35,7 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run test:smoke",
     "test:smoke": "node scripts/smoke-test.mjs",
+    "test:api": "node scripts/api-smoke-test.mjs",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
