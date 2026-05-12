@@ -45,7 +45,7 @@ export interface UploadImageOptions {
   compressionConfig?: CompressionConfig;
 
   /**
-   * Format to convert AVIF → before uploading. CF Images doesn't accept AVIF as
+   * Format to convert AVIF → before uploading. Cloudflare Images doesn't accept AVIF as
    * input. Defaults to `"webp"` if omitted.
    */
   avifConversionFormat?: AvifConversionFormat;

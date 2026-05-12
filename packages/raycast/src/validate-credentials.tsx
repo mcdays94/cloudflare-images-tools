@@ -9,13 +9,13 @@ import { useEffect, useState } from "react";
 import {
   validateCredentials,
   type ValidationResult,
-} from "@mcdays94/cf-images-core";
+} from "@mcdays94/cloudflare-images-core";
 import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
 
 /**
  * The "Validate Cloudflare Credentials" command. The first command users
  * should run after installing the extension — it sanity-checks the Account
- * ID, API Token, and Account Hash by hitting the CF Images list endpoint.
+ * ID, API Token, and Account Hash by hitting the Cloudflare Images list endpoint.
  *
  * Surface notes:
  *  - `accountHash` cannot be verified server-side. We do a presence check and
@@ -72,7 +72,7 @@ export default function ValidateCredentialsCommand() {
             onAction={() => setVersion((v) => v + 1)}
           />
           <Action
-            title="Open CF Images Preferences"
+            title="Open Cloudflare Images Preferences"
             icon={Icon.Gear}
             onAction={openExtensionPreferences}
           />
@@ -134,13 +134,13 @@ function buildMarkdown(
       "",
       "## What this *didn't* check",
       "",
-      "- **Account Hash** isn't verified server-side. It's a public hash used in `imagedelivery.net/{hash}/...` URLs. Double-check by opening any image in the CF Images dashboard — the hash is in the URL.",
+      "- **Account Hash** isn't verified server-side. It's a public hash used in `imagedelivery.net/{hash}/...` URLs. Double-check by opening any image in the Cloudflare Images dashboard — the hash is in the URL.",
       "- **Signed URL signing key** isn't verified. It'll be fetched lazily the first time you upload with signed URLs enabled.",
       "",
       "## Next steps",
       "",
       "- Try **Upload Clipboard Image** from Raycast's root search to upload a screenshot.",
-      "- Or open **My CF Images** to browse what's already in your account.",
+      "- Or open **My Cloudflare Images** to browse what's already in your account.",
     ].join("\n");
   }
 

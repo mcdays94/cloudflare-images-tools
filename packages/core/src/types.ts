@@ -45,7 +45,7 @@ export interface CompressionConfig {
 export type OutputFormat = "markdown" | "html" | "raw";
 
 /**
- * What format AVIF images should be converted to before uploading. CF Images
+ * What format AVIF images should be converted to before uploading. Cloudflare Images
  * doesn't accept AVIF as an input format.
  */
 export type AvifConversionFormat = "webp" | "jpeg" | "png";

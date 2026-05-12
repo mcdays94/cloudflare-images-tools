@@ -13,7 +13,7 @@ import {
   formatImageUrl,
   uploadImage,
   type UploadOutcome,
-} from "@mcdays94/cf-images-core";
+} from "@mcdays94/cloudflare-images-core";
 import {
   buildCloudflareConfig,
   buildCompressionConfig,
@@ -118,7 +118,7 @@ export default async function UploadFinderCommand() {
         compressionConfig: compression,
         avifConversionFormat: prefs.avifConversionFormat,
         metadataTemplate: {
-          uploadedBy: "raycast-cf-images",
+          uploadedBy: "raycast-cloudflare-images",
           uploadedAt: "${timestamp}",
           fileName: "${fileName}",
         },

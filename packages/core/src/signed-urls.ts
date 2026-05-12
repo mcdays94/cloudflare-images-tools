@@ -42,7 +42,7 @@ export async function fetchSigningKey(
 }
 
 /**
- * Generates a signed CF Images URL using HMAC-SHA256 over the URL path.
+ * Generates a signed Cloudflare Images URL using HMAC-SHA256 over the URL path.
  *
  * Format of the URL path that gets signed:
  *   `/<accountHash>/<imageId><variant>`        (no expiry)

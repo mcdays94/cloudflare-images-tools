@@ -1,12 +1,12 @@
 {
-  "name": "@mcdays94/cf-images-core",
+  "name": "@mcdays94/cloudflare-images-core",
   "version": "0.0.1",
-  "description": "Core TypeScript logic for the CF Images tools — upload, dedupe, signed URLs, compression, metadata. No editor or platform assumptions. Unofficial.",
+  "description": "Core TypeScript logic for the Cloudflare Images tools — upload, dedupe, signed URLs, compression, metadata. No editor or platform assumptions. Unofficial.",
   "author": "Miguel Caetano Dias <amtccdias@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcdays94/cf-images-tools",
+    "url": "https://github.com/mcdays94/cloudflare-images-tools",
     "directory": "packages/core"
   },
   "keywords": [

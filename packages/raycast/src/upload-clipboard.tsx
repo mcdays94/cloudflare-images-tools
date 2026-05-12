@@ -18,7 +18,7 @@ import {
   calculateFileHash,
   formatImageUrl,
   uploadImage,
-} from "@mcdays94/cf-images-core";
+} from "@mcdays94/cloudflare-images-core";
 import {
   buildCloudflareConfig,
   buildCompressionConfig,
@@ -204,7 +204,7 @@ export default async function UploadClipboardCommand() {
         compressionConfig: compression,
         avifConversionFormat: prefs.avifConversionFormat,
         metadataTemplate: {
-          uploadedBy: "raycast-cf-images",
+          uploadedBy: "raycast-cloudflare-images",
           uploadedAt: "${timestamp}",
           fileName: "${fileName}",
         },
@@ -245,7 +245,7 @@ export default async function UploadClipboardCommand() {
 
     // 8. HUD confirmation. Raycast shows HUDs as a small bezel even after the
     // window is closed.
-    await showHUD(`✓ ${humanFormatLabel(prefs.outputFormat)} pasted from CF Images`);
+    await showHUD(`✓ ${humanFormatLabel(prefs.outputFormat)} pasted from Cloudflare Images`);
   } catch (err) {
     await showToast({
       style: Toast.Style.Failure,

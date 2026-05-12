@@ -21,7 +21,7 @@
 - [ ] Same core pipeline as v0.2
 - [ ] Batch mode (multiple selections)
 
-## v0.4 — My CF Images
+## v0.4 — My Cloudflare Images
 
 - [ ] `my-images.tsx`: paginated list view with thumbnails (Raycast `List.Item` with image accessory)
 - [ ] Actions: copy URL (markdown / HTML / raw), open in browser, delete (with confirmation), copy image ID, view metadata
@@ -38,7 +38,7 @@
 
 ## v1.0 — MCP server
 
-- [ ] `packages/mcp` — `@mcdays94/cf-images-mcp`
+- [ ] `packages/mcp` — `@mcdays94/cloudflare-images-mcp`
 - [ ] Tools: `upload_image`, `list_images`, `delete_image`, `get_image`
 - [ ] Stdio MCP transport
 - [ ] Zed extension wrapper (Rust + WIT bindings)

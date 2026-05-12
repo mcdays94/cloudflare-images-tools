@@ -1,4 +1,4 @@
-// Public exports for @mcdays94/cf-images-core.
+// Public exports for @mcdays94/cloudflare-images-core.
 //
 // All functions are pure: they take their inputs as arguments and return their
 // results. Surfaces (Raycast, MCP, CLI) wire them up to their native UIs.

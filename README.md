@@ -1,6 +1,6 @@
-# cf-images-tools
+# cloudflare-images-tools
 
-A monorepo for the **CF Images** family of tools — a clipboard-first uploader for
+A monorepo for the **Cloudflare Images** family of tools — a clipboard-first uploader for
 Cloudflare Images, plus surfaces for Raycast, Zed (via MCP), and beyond.
 
 Unofficial. Not affiliated with Cloudflare, Inc.
@@ -29,18 +29,18 @@ replacement.
 
 | Package | Status | Purpose |
 |---|---|---|
-| [`packages/core`](./packages/core) | scaffolded | `@mcdays94/cf-images-core` — pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete. No editor or platform assumptions. |
-| [`packages/raycast`](./packages/raycast) | scaffolded, **Validate Credentials** command works end-to-end | `CF Images` Raycast extension. Three commands: **Upload Clipboard Image**, **Upload Selected File**, **My CF Images**. |
-| `packages/mcp` | not yet | `@mcdays94/cf-images-mcp` — MCP server wrapping the same core. Adds Zed/Claude Code/Cursor support. |
+| [`packages/core`](./packages/core) | scaffolded | `@mcdays94/cloudflare-images-core` — pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete. No editor or platform assumptions. |
+| [`packages/raycast`](./packages/raycast) | scaffolded, **Validate Credentials** command works end-to-end | `Cloudflare Images` Raycast extension. Three commands: **Upload Clipboard Image**, **Upload Selected File**, **My Cloudflare Images**. |
+| `packages/mcp` | not yet | `@mcdays94/cloudflare-images-mcp` — MCP server wrapping the same core. Adds Zed/Claude Code/Cursor support. |
 
 ## Layout
 
 ```
-cf-images-tools/
+cloudflare-images-tools/
   package.json              ← npm workspaces root
   tsconfig.base.json        ← shared strict TS config
   packages/
-    core/                   ← @mcdays94/cf-images-core
+    core/                   ← @mcdays94/cloudflare-images-core
       src/
         index.ts            ← public exports
         types.ts
@@ -53,7 +53,7 @@ cf-images-tools/
         list.ts             ← GET /accounts/:id/images/v1 (paginated)
         delete.ts           ← DELETE /accounts/:id/images/v1/:image_id
         validate.ts         ← Cheap auth check (HEAD-style ping)
-    raycast/                ← CF Images Raycast extension
+    raycast/                ← Cloudflare Images Raycast extension
       package.json          ← Raycast manifest
       src/
         validate-credentials.tsx   ← Working — pings CF API, shows toast
@@ -76,8 +76,8 @@ npm run dev   # launches Raycast in dev mode and registers all commands
 ```
 
 Open Raycast → "Validate Cloudflare Credentials" command should appear under
-"CF Images". The first time you run it, it'll prompt for your account ID, API
-token, and account hash via Raycast preferences. Then it pings the CF Images
+"Cloudflare Images". The first time you run it, it'll prompt for your account ID, API
+token, and account hash via Raycast preferences. Then it pings the Cloudflare Images
 API and shows a success / failure toast.
 
 ## Preferences are persisted by Raycast, not by us
@@ -96,7 +96,7 @@ to re-enter them every time you rebuild.
 ### ⚠️ The one footgun
 
 Raycast keys preferences off the **`name`** field in `packages/raycast/package.json`,
-which is `"cf-images"`. Do **not** rename it once you've installed the
+which is `"cloudflare-images"`. Do **not** rename it once you've installed the
 extension — if you do, Raycast treats it as a brand-new extension and your
 preferences reset to blank. Rename `title` freely (that's the human-facing
 display name); leave `name` alone forever.

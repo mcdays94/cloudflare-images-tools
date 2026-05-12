@@ -1,13 +1,13 @@
 {
-  "name": "cf-images-tools",
+  "name": "cloudflare-images-tools",
   "version": "0.0.0",
   "private": true,
-  "description": "Monorepo for the CF Images family of tools: Raycast extension, MCP server, and shared TypeScript core. Unofficial.",
+  "description": "Monorepo for the Cloudflare Images family of tools: Raycast extension, MCP server, and shared TypeScript core. Unofficial.",
   "author": "Miguel Caetano Dias <amtccdias@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcdays94/cf-images-tools"
+    "url": "https://github.com/mcdays94/cloudflare-images-tools"
   },
   "workspaces": [
     "packages/*"

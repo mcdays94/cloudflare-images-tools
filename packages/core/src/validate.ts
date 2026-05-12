@@ -26,7 +26,7 @@ export type ValidationFailureReason =
  * `accountHash` — that's only used to construct delivery URLs and can't be
  * verified server-side. The surface layer should add a UX hint along the
  * lines of "Account Hash isn't checked here — copy it from the URL of any
- * image in your CF Images dashboard."
+ * image in your Cloudflare Images dashboard."
  */
 export async function validateCredentials(
   config: Pick<CloudflareConfig, "accountId" | "apiToken" | "accountHash">,
@@ -51,7 +51,7 @@ export async function validateCredentials(
       ok: false,
       reason: "missing-account-hash",
       detail:
-        "Account Hash is empty. Copy it from the URL of any image in the CF Images dashboard.",
+        "Account Hash is empty. Copy it from the URL of any image in the Cloudflare Images dashboard.",
     };
   }
 

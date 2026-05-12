@@ -1,5 +1,5 @@
 import { LocalStorage } from "@raycast/api";
-import { fetchSigningKey } from "@mcdays94/cf-images-core";
+import { fetchSigningKey } from "@mcdays94/cloudflare-images-core";
 
 /**
  * The signing key lives in Raycast LocalStorage keyed by account ID, so each

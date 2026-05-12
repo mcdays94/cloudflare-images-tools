@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "cf-images",
-  "title": "CF Images",
+  "name": "cloudflare-images",
+  "title": "Cloudflare Images",
   "description": "Upload images to Cloudflare Images from your clipboard, Finder, or anywhere on your Mac. Includes a browser for your uploaded images. Unofficial.",
   "icon": "icon.png",
   "author": "miguel_caetano_dias",
@@ -23,28 +23,28 @@
     {
       "name": "validate-credentials",
       "title": "Validate Cloudflare Credentials",
-      "subtitle": "CF Images",
+      "subtitle": "Cloudflare Images",
       "description": "Pings the Cloudflare Images API to confirm your Account ID, API Token, and Account Hash are configured correctly.",
       "mode": "view"
     },
     {
       "name": "upload-clipboard",
       "title": "Upload Clipboard Image",
-      "subtitle": "CF Images",
+      "subtitle": "Cloudflare Images",
       "description": "Reads the image currently on your clipboard, uploads it to Cloudflare Images, and copies the formatted URL back.",
       "mode": "no-view"
     },
     {
       "name": "upload-finder",
       "title": "Upload Selected File",
-      "subtitle": "CF Images",
+      "subtitle": "Cloudflare Images",
       "description": "Uploads the image currently selected in Finder to Cloudflare Images.",
       "mode": "no-view"
     },
     {
       "name": "my-images",
-      "title": "My CF Images",
-      "subtitle": "CF Images",
+      "title": "My Cloudflare Images",
+      "subtitle": "Cloudflare Images",
       "description": "Browse, copy URLs from, and delete the images in your Cloudflare Images account.",
       "mode": "view"
     }
@@ -165,7 +165,7 @@
     }
   ],
   "dependencies": {
-    "@mcdays94/cf-images-core": "*",
+    "@mcdays94/cloudflare-images-core": "*",
     "@raycast/api": "^1.93.2",
     "@raycast/utils": "^1.17.0"
   },

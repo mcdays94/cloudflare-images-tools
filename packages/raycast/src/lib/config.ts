@@ -4,7 +4,7 @@ import type {
   CloudflareConfig,
   CompressionConfig,
   OutputFormat,
-} from "@mcdays94/cf-images-core";
+} from "@mcdays94/cloudflare-images-core";
 
 /**
  * Shape of the Raycast preferences declared in `package.json`. Mirrored here

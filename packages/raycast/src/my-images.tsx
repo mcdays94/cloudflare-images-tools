@@ -18,11 +18,11 @@ import {
   generateSignedUrl,
   listImages,
   type CloudflareImage,
-} from "@mcdays94/cf-images-core";
+} from "@mcdays94/cloudflare-images-core";
 import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
 
 /**
- * My CF Images — V0.4 milestone in ROADMAP.md.
+ * My Cloudflare Images — V0.4 milestone in ROADMAP.md.
  *
  * STATUS: stub. The list scaffold works: it fetches the first page of images
  * and renders them with thumbnails and a basic action panel (copy URL,
