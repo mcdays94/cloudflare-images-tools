@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="packages/raycast/assets/icon.png" width="128" height="128" alt="Cloudflare Images icon" />
+</p>
+
 # cloudflare-images-tools
 
 A monorepo for the **Cloudflare Images** family of tools — a clipboard-first
