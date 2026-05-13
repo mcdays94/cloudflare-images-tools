@@ -1,0 +1,23 @@
+packages/raycast/package.json
+  a64c5d15eac298f7 256
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "66046bcb058f888a4194a081b74884284c3e2223",
+  "prompts": {
+    "a64c5d15eac298f7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1e387fd1affepEV3G8XWNXSUq4",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "mcdays94",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
