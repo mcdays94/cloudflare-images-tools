@@ -1,0 +1,53 @@
+packages/raycast/src/lib/config.ts
+  a64c5d15eac298f7 7
+packages/raycast/package.json
+  a64c5d15eac298f7 256
+packages/raycast/src/lib/upload-clipboard-impl.ts
+  a64c5d15eac298f7 23
+README.md
+  a64c5d15eac298f7 47,49,118
+packages/raycast/src/lib/cache.ts
+  a64c5d15eac298f7 5
+packages/raycast/src/upload-clipboard.tsx
+  a64c5d15eac298f7 2
+packages/raycast/src/validate-credentials.tsx
+  a64c5d15eac298f7 12
+packages/core/scripts/smoke-test.mjs
+  a64c5d15eac298f7 2,4
+packages/raycast/src/lib/signing-key.ts
+  a64c5d15eac298f7 2
+packages/core/scripts/api-smoke-test.mjs
+  a64c5d15eac298f7 4,91
+packages/raycast/src/my-images.tsx
+  a64c5d15eac298f7 23
+packages/raycast/src/set-default-variant.tsx
+  a64c5d15eac298f7 16
+packages/core/README.md
+  a64c5d15eac298f7 1,14,26,44,58,76,89,103
+packages/core/src/index.ts
+  a64c5d15eac298f7 1
+packages/core/package.json
+  a64c5d15eac298f7 2
+packages/raycast/src/lib/upload-finder-impl.ts
+  a64c5d15eac298f7 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "a897cd0559023fb5e46dec422adf68e221905957",
+  "prompts": {
+    "a64c5d15eac298f7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1e387fd1affepEV3G8XWNXSUq4",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "mcdays94",
+      "messages": [],
+      "total_additions": 27,
+      "total_deletions": 27,
+      "accepted_lines": 27,
+      "overriden_lines": 0
+    }
+  }
+}
