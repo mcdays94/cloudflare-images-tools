@@ -18,7 +18,7 @@ copy on the listing page, so keep the most recent release at the top.
 - Pagination in My Cloudflare Images beyond the first 100 images.
 - Bulk delete in My Cloudflare Images.
 
-## [0.4.0] — 2026-05-12
+## [0.4.0] - {PR_MERGE_DATE}
 
 Local-only release: parity with the VS Code extension is closed.
 
@@ -66,7 +66,7 @@ Local-only release: parity with the VS Code extension is closed.
 - `Clipboard.copy` → `Clipboard.paste` in Upload Clipboard Image —
   preserves the paste-from-clipboard UX from the VS Code extension.
 
-## [0.1.0] — 2026-05-12
+## [0.1.0] - 2026-05-12
 
 Initial Raycast scaffold:
 

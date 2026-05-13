@@ -129,10 +129,13 @@ export default function MyImagesCommand() {
       isLoading={isLoading}
       isShowingDetail={isShowingDetail}
       searchBarPlaceholder="Search filename, image ID, or metadata…"
+      // Only set navigationTitle when there's contextual info to surface
+      // (Raycast docs: leave auto-set to the command name in the happy
+      // path; override only when adding context).
       navigationTitle={
         signingKeyError
-          ? `My Cloudflare Images (signing key unavailable)`
-          : "My Cloudflare Images"
+          ? "My Cloudflare Images (signing key unavailable)"
+          : undefined
       }
     >
       {!isLoading && images.length === 0 ? (

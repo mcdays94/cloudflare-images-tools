@@ -127,9 +127,10 @@ export default function SetDefaultVariantCommand() {
     <List
       isLoading={isLoading}
       searchBarPlaceholder="Filter variants…"
-      navigationTitle={
-        stored ? `Default variant: ${stored}` : "No default variant set"
-      }
+      // Surface the currently-stored default in the nav title when one
+      // exists — that's genuine context. Without one, leave Raycast to
+      // auto-fill from the command name.
+      navigationTitle={stored ? `Default variant: ${stored}` : undefined}
     >
       {variants.length === 0 && !isLoading ? (
         <List.EmptyView
