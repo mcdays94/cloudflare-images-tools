@@ -96,10 +96,7 @@ export async function addImageToCache(
     fileName,
     uploadedAt: Date.now(),
   };
-  await LocalStorage.setItem(
-    CACHE_KEY_PREFIX + hash,
-    JSON.stringify(entry),
-  );
+  await LocalStorage.setItem(CACHE_KEY_PREFIX + hash, JSON.stringify(entry));
 }
 
 /**

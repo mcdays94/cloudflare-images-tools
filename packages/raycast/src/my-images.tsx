@@ -240,8 +240,8 @@ function MyImageRow({
       },
       tooltip: signingKey
         ? "Image requires signed URLs; the preview uses an HMAC-signed delivery URL."
-        : signingKeyError ??
-          "Image requires signed URLs but the signing key couldn't be fetched. The preview will 404.",
+        : (signingKeyError ??
+          "Image requires signed URLs but the signing key couldn't be fetched. The preview will 404."),
     });
   }
   accessories.push({ date: new Date(image.uploaded) });

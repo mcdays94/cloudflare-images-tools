@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!--
+    Concept 2 — "Beam Up"
+    A photo card at the bottom emitting a wide upward beam into a cloud at
+    the top. Very direct "uploading an image to a cloud" metaphor. Dark
+    navy background reads "premium / serious tool"; warm cream foreground
+    keeps it friendly.
+  -->
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F2D5C"/>
+      <stop offset="1" stop-color="#0D1738"/>
+    </linearGradient>
+    <linearGradient id="beam2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FCE9CB" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#FCE9CB" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="512" height="512" rx="112" ry="112" fill="url(#bg2)"/>
+
+  <!-- upward beam, trapezoidal -->
+  <path d="M 198 360 L 314 360 L 360 156 L 152 156 Z" fill="url(#beam2)"/>
+
+  <!-- cloud at top -->
+  <g fill="#FCE9CB">
+    <circle cx="180" cy="140" r="40"/>
+    <circle cx="226" cy="118" r="52"/>
+    <circle cx="282" cy="128" r="48"/>
+    <circle cx="332" cy="146" r="40"/>
+    <rect x="170" y="138" width="172" height="42" rx="21"/>
+  </g>
+
+  <!-- photo card at bottom -->
+  <g transform="translate(140 348)">
+    <rect width="232" height="56" rx="14" fill="#FCE9CB"/>
+    <!-- small horizon detail -->
+    <path d="M 18 44 L 56 22 L 84 38 L 110 26 L 144 44 Z" fill="#FF8259"/>
+    <circle cx="174" cy="22" r="9" fill="#FF8259"/>
+  </g>
+
+  <!-- subtle ground line -->
+  <rect x="120" y="412" width="272" height="4" rx="2" fill="#FCE9CB" opacity="0.18"/>
+</svg>

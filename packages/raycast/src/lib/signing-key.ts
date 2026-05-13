@@ -27,9 +27,7 @@ export interface SigningKeyContext {
   manualOverride?: string;
 }
 
-export async function getSigningKey(
-  ctx: SigningKeyContext,
-): Promise<string> {
+export async function getSigningKey(ctx: SigningKeyContext): Promise<string> {
   const trimmedOverride = ctx.manualOverride?.trim();
   if (trimmedOverride) {
     return trimmedOverride;

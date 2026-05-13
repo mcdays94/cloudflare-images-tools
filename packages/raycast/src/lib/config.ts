@@ -134,16 +134,12 @@ export function parseMetadataTemplate(
     };
   }
 
-  if (
-    parsed === null ||
-    typeof parsed !== "object" ||
-    Array.isArray(parsed)
-  ) {
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
     return {
       template: DEFAULT_METADATA_TEMPLATE,
       parseError: true,
       errorMessage:
-        "Metadata template must be a JSON object (e.g. {\"key\":\"value\"}).",
+        'Metadata template must be a JSON object (e.g. {"key":"value"}).',
     };
   }
 

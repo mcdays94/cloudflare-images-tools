@@ -22,7 +22,6 @@ export default async function UploadClipboardCommand(
   props: LaunchProps<{ arguments: { format?: FormatArg } }>,
 ) {
   const argFormat = props.arguments?.format;
-  const override =
-    argFormat && argFormat !== "preference" ? argFormat : null;
+  const override = argFormat && argFormat !== "preference" ? argFormat : null;
   await runUploadClipboard(override);
 }

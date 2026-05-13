@@ -246,9 +246,7 @@ export async function runUploadFinder(
 
   if (failures.length === 0) {
     if (total === 1) {
-      await showHUD(
-        `✓ ${successes[0]!.fileName} copied as ${formatLabel}`,
-      );
+      await showHUD(`✓ ${successes[0]!.fileName} copied as ${formatLabel}`);
     } else {
       await showHUD(
         `✓ ${successes.length} images copied as ${formatLabel}${cacheHitsNote}`,

@@ -51,10 +51,7 @@ export default function SetDefaultVariantCommand() {
       setState({ kind: "loading" });
 
       // Surface credential gaps before hitting the API.
-      if (
-        !prefs.accountId?.trim() ||
-        !prefs.apiToken?.trim()
-      ) {
+      if (!prefs.accountId?.trim() || !prefs.apiToken?.trim()) {
         if (!cancelled) {
           setState({
             kind: "error",
@@ -168,7 +165,12 @@ export default function SetDefaultVariantCommand() {
                 isStored
                   ? { tag: { value: "Default", color: Color.Green } }
                   : variant.neverRequireSignedURLs
-                    ? { tag: { value: "Always unsigned", color: Color.SecondaryText } }
+                    ? {
+                        tag: {
+                          value: "Always unsigned",
+                          color: Color.SecondaryText,
+                        },
+                      }
                     : {},
               ]}
               actions={

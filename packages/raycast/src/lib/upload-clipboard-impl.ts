@@ -262,7 +262,9 @@ export async function runUploadClipboard(
     await Clipboard.paste(formatted);
 
     // 9. HUD confirmation.
-    await showHUD(`✓ ${humanFormatLabel(effectiveFormat)} pasted from Cloudflare Images`);
+    await showHUD(
+      `✓ ${humanFormatLabel(effectiveFormat)} pasted from Cloudflare Images`,
+    );
   } catch (err) {
     await showToast({
       style: Toast.Style.Failure,
