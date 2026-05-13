@@ -59,10 +59,10 @@ jobs:
         run: npm ci
 
       - name: Build core
-        run: npm run build --workspace=@mcdays94/cloudflare-images-core
+        run: npm run build --workspace=@mcdays/cloudflare-images-core
 
       - name: Core smoke tests
-        run: npm run test:smoke --workspace=@mcdays94/cloudflare-images-core
+        run: npm run test:smoke --workspace=@mcdays/cloudflare-images-core
 
       - name: Raycast typecheck
         run: npm run typecheck --workspace=cloudflare-images
