@@ -188,23 +188,6 @@ They survive `ray develop` restarts, Raycast app restarts, Mac reboots, and
 the future jump from dev to a published Raycast Store release. You don't need
 to re-enter them every time you rebuild.
 
-## Roadmap
-
-```
-v0.1   Validate Credentials .................... ✅
-v0.2   Upload Clipboard Image .................. ✅
-v0.2.1 Set Default Variant ..................... ✅
-v0.2.2 Variant cache fix ....................... ✅
-v0.2.3 Format dropdown argument ................ ✅
-v0.2.4 Filename in CF Images dashboard ......... ✅
-v0.3   Upload Selected File multi-select ....... ✅
-v0.3.1 Format-locked command variants .......... ✅
-v0.4   Metadata + manual signing key parity .... ✅
-       - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-v0.5   Polish (icon, hero gif, CI, Store sub) .. ⬜
-v1.0   MCP server (Zed-native surface) ......... ⬜
-```
-
 ## License
 
 MIT. See [`LICENSE`](./LICENSE).
