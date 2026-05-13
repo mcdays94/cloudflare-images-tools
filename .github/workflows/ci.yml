@@ -64,9 +64,14 @@ jobs:
       - name: Core smoke tests
         run: npm run test:smoke --workspace=@mcdays/cloudflare-images-core
 
-      - name: Raycast typecheck
-        run: npm run typecheck --workspace=cloudflare-images
-
+      # ray build must run BEFORE the standalone typecheck — it's what
+      # generates packages/raycast/raycast-env.d.ts, which declares the
+      # global 'Preferences' ambient type that lib/config.ts depends on.
+      # Without that file, tsc fails with TS2304 'Cannot find name
+      # Preferences'.
       - name: Raycast bundle (ray build)
         run: npx ray build
         working-directory: packages/raycast
+
+      - name: Raycast typecheck
+        run: npm run typecheck --workspace=cloudflare-images
