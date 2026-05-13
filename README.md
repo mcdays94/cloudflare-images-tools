@@ -4,7 +4,7 @@
 
 # cloudflare-images-tools
 
-A monorepo for the **Cloudflare Images** family of tools — a clipboard-first
+A monorepo for the **Cloudflare Images** family of tools, a clipboard-first
 uploader for Cloudflare Images, plus surfaces for Raycast, Zed (via MCP),
 and beyond.
 
@@ -14,7 +14,7 @@ and beyond.
 > via VS Code's `documentPasteEdits` / `documentDropEdits` APIs. This repo
 > ports the same upload / compression / dedupe / signing logic to Raycast
 > (and, soon, MCP) so the workflow keeps working in editors that don't
-> expose those APIs — Zed in particular.
+> expose those APIs, Zed in particular.
 
 Unofficial. Not affiliated with Cloudflare, Inc.
 
@@ -25,7 +25,7 @@ Unofficial. Not affiliated with Cloudflare, Inc.
 The original implementation lives in the
 [`cloudflare-images-upload`](https://github.com/mcdays94/cloudflare-images-upload-extension)
 VS Code / Cursor / Windsurf extension. That works great inside the VS Code
-extension model — `documentPasteEdits` and `documentDropEdits` intercept paste
+extension model, `documentPasteEdits` and `documentDropEdits` intercept paste
 and drag events directly in the editor.
 
 Other editors (Zed, in particular) don't expose those surfaces. The fix is to
@@ -35,7 +35,7 @@ works in every app, not just one editor. A future MCP server adds an
 agent-callable surface that drops the same logic into Zed, Claude Code,
 Cursor, and anything else that speaks MCP.
 
-The VS Code extension stays as-is — this repo is its sibling, not its
+The VS Code extension stays as-is, this repo is its sibling, not its
 replacement. Bug fixes that apply to the shared upload pipeline (compression,
 AVIF conversion, signed URLs, metadata templating) can flow between the two
 codebases, but neither depends on the other.
@@ -44,9 +44,9 @@ codebases, but neither depends on the other.
 
 | Package | Status | Purpose |
 |---|---|---|
-| [`packages/core`](./packages/core) | ✅ feature-complete for v0.4 | `@mcdays94/cloudflare-images-core` — pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete, variants, URL building. No editor or platform assumptions. |
+| [`packages/core`](./packages/core) | ✅ feature-complete for v0.4 | `@mcdays94/cloudflare-images-core`, pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete, variants, URL building. No editor or platform assumptions. |
 | [`packages/raycast`](./packages/raycast) | ✅ feature-complete for v0.4 | **Cloudflare Images** Raycast extension. 11 commands; see below. |
-| `packages/mcp` | ⬜ not yet | `@mcdays94/cloudflare-images-mcp` — MCP server wrapping the same core. Will add Zed / Claude Code / Cursor support. v1.0 milestone. |
+| `packages/mcp` | ⬜ not yet | `@mcdays94/cloudflare-images-mcp`, MCP server wrapping the same core. Will add Zed / Claude Code / Cursor support. v1.0 milestone. |
 
 ## Raycast extension commands
 
@@ -72,9 +72,9 @@ token + manual signing key in macOS Keychain.
 
 | Preference | Type | Default | Notes |
 |---|---|---|---|
-| Cloudflare Account ID | textfield | — | Required. Find in dashboard URL. |
-| Cloudflare API Token | password | — | Required. Needs `Cloudflare Images: Edit`. |
-| Cloudflare Account Hash | textfield | — | Required. Public hash in `imagedelivery.net/{hash}/...`. |
+| Cloudflare Account ID | textfield | - | Required. Find in dashboard URL. |
+| Cloudflare API Token | password | - | Required. Needs `Cloudflare Images: Edit`. |
+| Cloudflare Account Hash | textfield | - | Required. Public hash in `imagedelivery.net/{hash}/...`. |
 | Default Variant (fallback) | textfield | `/public` | Overridden by "Set Default Variant" command. |
 | Output Format | dropdown | Markdown | Default for the preference-driven `Upload Clipboard Image` / `Upload Selected File`. |
 | Signed URLs | checkbox | off | When on, generates HMAC-signed delivery URLs. |
@@ -93,7 +93,7 @@ token + manual signing key in macOS Keychain.
 | VS Code feature | Raycast status |
 |---|---|
 | Upload via clipboard paste | ✅ (Upload Clipboard Image + 3 format-locked) |
-| Upload via drag-drop | ⛔ Not possible — Raycast can't intercept editor drops |
+| Upload via drag-drop | ⛔ Not possible, Raycast can't intercept editor drops |
 | Upload via command palette | ✅ Every command appears in Raycast root search |
 | Per-language smart formatting | ⚠️ Replaced by `outputFormat` preference + dropdown + 6 format-locked commands |
 | Duplicate detection | ✅ SHA-256 dedupe cache in LocalStorage (30-day TTL) |
@@ -106,7 +106,7 @@ token + manual signing key in macOS Keychain.
 | Compression quality / max size knobs | ✅ |
 | Preserve PNG format | ✅ |
 | AVIF → WebP/JPEG/PNG conversion | ✅ |
-| Delete-on-removal (watch document) | ⛔ Not possible — Raycast can't watch editor documents. Replaced by My Cloudflare Images list view with delete. |
+| Delete-on-removal (watch document) | ⛔ Not possible, Raycast can't watch editor documents. Replaced by My Cloudflare Images list view with delete. |
 
 ## Layout
 
@@ -203,7 +203,7 @@ to re-enter them every time you rebuild.
 
 Raycast keys preferences off the **`name`** field in `packages/raycast/package.json`,
 which is `"cloudflare-images"`. Do **not** rename it once you've installed the
-extension — if you do, Raycast treats it as a brand-new extension and your
+extension, if you do, Raycast treats it as a brand-new extension and your
 preferences reset to blank. Rename `title` freely (that's the human-facing
 display name); leave `name` alone forever.
 
@@ -221,7 +221,7 @@ v0.2.4 Filename in CF Images dashboard ......... ✅
 v0.3   Upload Selected File multi-select ....... ✅
 v0.3.1 Format-locked command variants .......... ✅
 v0.4   Metadata + manual signing key parity .... ✅
-       — — — — — — — — — — — — — — — — — — — — — —
+       - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 v0.5   Polish (icon, hero gif, CI, Store sub) .. ⬜
 v1.0   MCP server (Zed-native surface) ......... ⬜
 ```
@@ -234,7 +234,7 @@ VS Code / Cursor / Windsurf extension by the same author. The VS Code
 extension came first; this repo lifts and adapts its upload / compression /
 dedupe / signed-URL / metadata-templating logic into a Raycast surface and a
 forthcoming MCP server. If you use the Raycast extension and like it, the
-VS Code extension is probably also worth a look — it's the same workflow
+VS Code extension is probably also worth a look, it's the same workflow
 inside your editor instead of next to it.
 
 The Raycast extension is built with [`@raycast/api`](https://developers.raycast.com)
