@@ -1,5 +1,5 @@
 {
-  "name": "@mcdays94/cloudflare-images-core",
+  "name": "@mcdays/cloudflare-images-core",
   "version": "0.0.1",
   "description": "Core TypeScript logic for the Cloudflare Images family of tools: upload, dedupe, signed URLs, compression, AVIF conversion, metadata templating, list, delete. No editor or platform assumptions. Unofficial.",
   "author": "Miguel Caetano Dias <amtccdias@gmail.com>",

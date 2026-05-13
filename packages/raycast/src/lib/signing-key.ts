@@ -1,5 +1,5 @@
 import { LocalStorage } from "@raycast/api";
-import { fetchSigningKey } from "@mcdays94/cloudflare-images-core";
+import { fetchSigningKey } from "@mcdays/cloudflare-images-core";
 
 /**
  * Resolves the HMAC signing key used for signed CF Images URLs.

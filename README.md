@@ -44,9 +44,9 @@ codebases, but neither depends on the other.
 
 | Package | Status | Purpose |
 |---|---|---|
-| [`packages/core`](./packages/core) | ✅ feature-complete for v0.4 | `@mcdays94/cloudflare-images-core`, pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete, variants, URL building. No editor or platform assumptions. |
+| [`packages/core`](./packages/core) | ✅ feature-complete for v0.4 | `@mcdays/cloudflare-images-core`, pure TypeScript: auth, upload, dedupe, signed URLs, compression, metadata, list, delete, variants, URL building. No editor or platform assumptions. |
 | [`packages/raycast`](./packages/raycast) | ✅ feature-complete for v0.4 | **Cloudflare Images** Raycast extension. 11 commands; see below. |
-| `packages/mcp` | ⬜ not yet | `@mcdays94/cloudflare-images-mcp`, MCP server wrapping the same core. Will add Zed / Claude Code / Cursor support. v1.0 milestone. |
+| `packages/mcp` | ⬜ not yet | `@mcdays/cloudflare-images-mcp`, MCP server wrapping the same core. Will add Zed / Claude Code / Cursor support. v1.0 milestone. |
 
 ## Raycast extension commands
 
@@ -115,7 +115,7 @@ cloudflare-images-tools/
   package.json              ← npm workspaces root
   tsconfig.base.json        ← shared strict TS config
   packages/
-    core/                   ← @mcdays94/cloudflare-images-core
+    core/                   ← @mcdays/cloudflare-images-core
       src/
         index.ts            ← public exports
         types.ts            ← CloudflareConfig, ImageCacheEntry (imageId), etc.

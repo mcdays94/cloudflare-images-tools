@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import {
   validateCredentials,
   type ValidationResult,
-} from "@mcdays94/cloudflare-images-core";
+} from "@mcdays/cloudflare-images-core";
 import { buildCloudflareConfig, getPreferences } from "./lib/config.js";
 
 /**

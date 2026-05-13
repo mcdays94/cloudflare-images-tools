@@ -1,4 +1,4 @@
-# @mcdays94/cloudflare-images-core
+# @mcdays/cloudflare-images-core
 
 Core TypeScript logic for the Cloudflare Images family of tools. Upload, dedupe, signed URLs, compression (via `sharp`), AVIF conversion, metadata templating, list, delete, variant management. No editor or platform assumptions, intended to be consumed by surface packages.
 
@@ -11,7 +11,7 @@ Unofficial. Not affiliated with Cloudflare, Inc.
 ## Install
 
 ```bash
-npm install @mcdays94/cloudflare-images-core
+npm install @mcdays/cloudflare-images-core
 ```
 
 Requires Node 20 or later (uses native `fetch`, `FormData`, `Blob`, `crypto.subtle`).
@@ -23,7 +23,7 @@ All functions are pure. No global state, no surface-specific dependencies. Pass 
 ### Upload
 
 ```ts
-import { uploadImage } from "@mcdays94/cloudflare-images-core";
+import { uploadImage } from "@mcdays/cloudflare-images-core";
 
 const outcome = await uploadImage({
   source: { type: "file", path: "/tmp/screenshot.png", fileName: "screenshot.png" },
@@ -41,7 +41,7 @@ const outcome = await uploadImage({
 ### List, delete, variants
 
 ```ts
-import { listImages, deleteImage, listVariants } from "@mcdays94/cloudflare-images-core";
+import { listImages, deleteImage, listVariants } from "@mcdays/cloudflare-images-core";
 
 const page = await listImages({ config: { accountId, apiToken }, perPage: 100, continuationToken: undefined });
 // page.images[], page.continuationToken
@@ -55,7 +55,7 @@ const variants = await listVariants({ accountId, apiToken });
 ### URL construction
 
 ```ts
-import { buildDeliveryUrl, buildPublicUrl, generateSignedUrl, formatImageUrl } from "@mcdays94/cloudflare-images-core";
+import { buildDeliveryUrl, buildPublicUrl, generateSignedUrl, formatImageUrl } from "@mcdays/cloudflare-images-core";
 
 // Chooses signed vs public based on config.useSignedUrls
 const url = buildDeliveryUrl(imageId, "/public", config);
@@ -73,7 +73,7 @@ formatImageUrl(url, "screenshot.png", "raw");      // https://...
 ### Validation, hashing, image-id extraction
 
 ```ts
-import { validateCredentials, calculateFileHash, extractImageIdFromUrl, fetchSigningKey } from "@mcdays94/cloudflare-images-core";
+import { validateCredentials, calculateFileHash, extractImageIdFromUrl, fetchSigningKey } from "@mcdays/cloudflare-images-core";
 
 const result = await validateCredentials({ accountId, apiToken, accountHash });
 // { ok: true, imageCount } or { ok: false, reason: "auth-failed" | "account-not-found" | ..., detail }
@@ -86,7 +86,7 @@ const key = await fetchSigningKey(accountId, apiToken);          // hits /accoun
 ### Metadata templating
 
 ```ts
-import { resolveMetadataTemplate } from "@mcdays94/cloudflare-images-core";
+import { resolveMetadataTemplate } from "@mcdays/cloudflare-images-core";
 
 const resolved = resolveMetadataTemplate(
   { uploadedBy: "my-tool", uploadedAt: "${timestamp}", fileName: "${fileName}" },
@@ -100,7 +100,7 @@ Eight placeholders supported: `${fileName}`, `${timestamp}`, `${date}`, `${time}
 ### Compression
 
 ```ts
-import { compressImageIfNeeded, convertAvifIfNeeded } from "@mcdays94/cloudflare-images-core";
+import { compressImageIfNeeded, convertAvifIfNeeded } from "@mcdays/cloudflare-images-core";
 
 // Progressive-quality reduction until file fits under maxFileSizeMB
 const result = await compressImageIfNeeded("/tmp/big.jpg", { enableCompression: true, maxFileSizeMB: 10, compressionQuality: 80, preservePngFormat: false });

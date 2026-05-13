@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Smoke tests for the pure-function exports of @mcdays94/cloudflare-images-core.
+// Smoke tests for the pure-function exports of @mcdays/cloudflare-images-core.
 //
-// Run with: `npm run test:smoke --workspace=@mcdays94/cloudflare-images-core`
+// Run with: `npm run test:smoke --workspace=@mcdays/cloudflare-images-core`
 //
 // This is intentionally NOT a full test framework — it's a single Node script
 // that imports the built `dist/` output and exercises each pure function with

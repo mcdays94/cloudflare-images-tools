@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Live API smoke test against a real Cloudflare Images account.
 //
-// Run with: `npm run test:api --workspace=@mcdays94/cloudflare-images-core`
+// Run with: `npm run test:api --workspace=@mcdays/cloudflare-images-core`
 //
 // Requires .env.local at the repo root with:
 //   CF_ACCOUNT_ID=...
@@ -88,7 +88,7 @@ Easiest way to provide them: copy .env.local.example at the repo root to
   $EDITOR .env.local
 
 Then re-run:
-  npm run test:api --workspace=@mcdays94/cloudflare-images-core
+  npm run test:api --workspace=@mcdays/cloudflare-images-core
 `);
   process.exit(1);
 }

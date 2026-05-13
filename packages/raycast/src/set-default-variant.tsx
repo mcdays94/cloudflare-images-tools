@@ -13,7 +13,7 @@ import {
   listVariants,
   type CloudflareVariant,
   type CloudflareVariantOptions,
-} from "@mcdays94/cloudflare-images-core";
+} from "@mcdays/cloudflare-images-core";
 import { getPreferences } from "./lib/config.js";
 import {
   clearStoredDefaultVariant,

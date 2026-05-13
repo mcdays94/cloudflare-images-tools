@@ -16,7 +16,7 @@ import {
   formatImageUrl,
   uploadImage,
   type OutputFormat,
-} from "@mcdays94/cloudflare-images-core";
+} from "@mcdays/cloudflare-images-core";
 import {
   buildCloudflareConfig,
   buildCompressionConfig,
