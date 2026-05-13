@@ -1,0 +1,23 @@
+.github/workflows/ci.yml
+  a64c5d15eac298f7 67-71,75-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "276e167ef9918e49adfa0aa3ce348f910ec3faa9",
+  "prompts": {
+    "a64c5d15eac298f7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1e387fd1affepEV3G8XWNXSUq4",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "mcdays94",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 3,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    }
+  }
+}
