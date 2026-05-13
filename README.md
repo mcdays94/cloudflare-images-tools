@@ -4,6 +4,14 @@ A monorepo for the **Cloudflare Images** family of tools — a clipboard-first
 uploader for Cloudflare Images, plus surfaces for Raycast, Zed (via MCP),
 and beyond.
 
+> **Inspired by the [`cloudflare-images-upload`](https://github.com/mcdays94/cloudflare-images-upload-extension) VS Code extension** (also published on
+> [Open VSX](https://open-vsx.org/extension/miguelcaetanodias/cloudflare-images-upload)).
+> The VS Code extension ships paste / drag-drop directly inside the editor
+> via VS Code's `documentPasteEdits` / `documentDropEdits` APIs. This repo
+> ports the same upload / compression / dedupe / signing logic to Raycast
+> (and, soon, MCP) so the workflow keeps working in editors that don't
+> expose those APIs — Zed in particular.
+
 Unofficial. Not affiliated with Cloudflare, Inc.
 
 ---
@@ -24,7 +32,9 @@ agent-callable surface that drops the same logic into Zed, Claude Code,
 Cursor, and anything else that speaks MCP.
 
 The VS Code extension stays as-is — this repo is its sibling, not its
-replacement.
+replacement. Bug fixes that apply to the shared upload pipeline (compression,
+AVIF conversion, signed URLs, metadata templating) can flow between the two
+codebases, but neither depends on the other.
 
 ## Packages
 
@@ -211,6 +221,21 @@ v0.4   Metadata + manual signing key parity .... ✅
 v0.5   Polish (icon, hero gif, CI, Store sub) .. ⬜
 v1.0   MCP server (Zed-native surface) ......... ⬜
 ```
+
+## Acknowledgements
+
+This project is a sibling port of the
+[`cloudflare-images-upload`](https://github.com/mcdays94/cloudflare-images-upload-extension)
+VS Code / Cursor / Windsurf extension by the same author. The VS Code
+extension came first; this repo lifts and adapts its upload / compression /
+dedupe / signed-URL / metadata-templating logic into a Raycast surface and a
+forthcoming MCP server. If you use the Raycast extension and like it, the
+VS Code extension is probably also worth a look — it's the same workflow
+inside your editor instead of next to it.
+
+The Raycast extension is built with [`@raycast/api`](https://developers.raycast.com)
+and uses [`sharp`](https://sharp.pixelplumbing.com) for image compression
+and AVIF conversion.
 
 ## License
 
