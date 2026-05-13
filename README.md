@@ -174,17 +174,6 @@ Open Raycast → "Validate Cloudflare Credentials" command should appear under
 API Token, and Account Hash via Raycast preferences (`⌘ ,`). Then it pings
 the CF Images API and shows a success / failure page with actions.
 
-### Live API test
-
-```bash
-cp .env.local.example .env.local   # fill in your three credentials
-npm run test:api --workspace=@mcdays94/cloudflare-images-core
-```
-
-Six steps: validateCredentials → listVariants → listImages → upload a 1×1
-PNG → fetch the constructed delivery URL → delete cleanup. Verifies the
-core package's API contract against your real account.
-
 ## Preferences are persisted by Raycast, not by us
 
 Once you fill them in once via `⌘ ,`, your **Account ID**, **API Token**, and
@@ -199,17 +188,7 @@ They survive `ray develop` restarts, Raycast app restarts, Mac reboots, and
 the future jump from dev to a published Raycast Store release. You don't need
 to re-enter them every time you rebuild.
 
-### ⚠️ The one footgun
-
-Raycast keys preferences off the **`name`** field in `packages/raycast/package.json`,
-which is `"cloudflare-images"`. Do **not** rename it once you've installed the
-extension, if you do, Raycast treats it as a brand-new extension and your
-preferences reset to blank. Rename `title` freely (that's the human-facing
-display name); leave `name` alone forever.
-
 ## Roadmap
-
-See [`ROADMAP.md`](./ROADMAP.md). Recent milestones:
 
 ```
 v0.1   Validate Credentials .................... ✅
@@ -225,21 +204,6 @@ v0.4   Metadata + manual signing key parity .... ✅
 v0.5   Polish (icon, hero gif, CI, Store sub) .. ⬜
 v1.0   MCP server (Zed-native surface) ......... ⬜
 ```
-
-## Acknowledgements
-
-This project is a sibling port of the
-[`cloudflare-images-upload`](https://github.com/mcdays94/cloudflare-images-upload-extension)
-VS Code / Cursor / Windsurf extension by the same author. The VS Code
-extension came first; this repo lifts and adapts its upload / compression /
-dedupe / signed-URL / metadata-templating logic into a Raycast surface and a
-forthcoming MCP server. If you use the Raycast extension and like it, the
-VS Code extension is probably also worth a look, it's the same workflow
-inside your editor instead of next to it.
-
-The Raycast extension is built with [`@raycast/api`](https://developers.raycast.com)
-and uses [`sharp`](https://sharp.pixelplumbing.com) for image compression
-and AVIF conversion.
 
 ## License
 

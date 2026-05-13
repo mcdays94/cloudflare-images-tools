@@ -80,12 +80,6 @@ Open with `⌘ ,` from any of the commands.
 | Preserve PNG Format | checkbox | off | When off, PNGs are converted to JPEG during compression |
 | AVIF Conversion Format | dropdown | WebP | AVIF inputs are converted to this before upload |
 
-## Acknowledgements
-
-This extension is a sibling port of the [`cloudflare-images-upload`](https://github.com/mcdays94/cloudflare-images-upload-extension) VS Code / Cursor / Windsurf extension by the same author. The VS Code original ships paste and drag-drop *inside* the editor via VS Code's `documentPasteEdits` and `documentDropEdits` APIs; this Raycast extension brings the same workflow *next to* the editor so it works in every Mac app, including editors that don't expose paste-hook APIs.
-
-Built with [`@raycast/api`](https://developers.raycast.com) and [`sharp`](https://sharp.pixelplumbing.com) for image compression and AVIF conversion.
-
 ## License
 
 MIT.
