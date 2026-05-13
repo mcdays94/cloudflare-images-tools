@@ -253,7 +253,7 @@
     }
   ],
   "dependencies": {
-    "@mcdays/cloudflare-images-core": "*",
+    "@mcdays/cloudflare-images-core": "^0.0.1",
     "@raycast/api": "^1.104.0",
     "@raycast/utils": "^1.17.0"
   },
