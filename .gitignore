@@ -40,3 +40,8 @@ coverage
 
 # OS
 Thumbs.db
+
+# Local-only working docs (handoffs, resume notes, etc.)
+resume.md
+HANDOFF.md
+NOTES.md
