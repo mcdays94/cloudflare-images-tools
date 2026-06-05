@@ -3,10 +3,10 @@
 //
 // Run with: `npm run test:smoke --workspace=@mcdays/cloudflare-images-core`
 //
-// This is intentionally NOT a full test framework — it's a single Node script
+// This is intentionally NOT a full test framework, it's a single Node script
 // that imports the built `dist/` output and exercises each pure function with
 // known inputs + expected outputs. The deliberate constraint is "no external
-// dependencies, no mocks, no Raycast/CF/network access" — the goal is fast,
+// dependencies, no mocks, no Raycast/CF/network access", the goal is fast,
 // deterministic validation of the math/string/HMAC building blocks. Network,
 // Raycast, and clipboard tests live elsewhere (api-smoke-test.mjs for the
 // former, manual Raycast testing for the latter).
@@ -20,6 +20,8 @@ import {
   formatImageUrl,
   generateSignedUrl,
   resolveMetadataTemplate,
+  resolveSignedMode,
+  resolveVariant,
 } from "../dist/index.js";
 
 let passed = 0;
@@ -31,9 +33,9 @@ function check(label, condition, detail = "") {
     console.log(`  \u001b[32m\u2713\u001b[0m ${label}`);
     passed++;
   } else {
-    console.log(`  \u001b[31m\u2717\u001b[0m ${label}${detail ? ` — ${detail}` : ""}`);
+    console.log(`  \u001b[31m\u2717\u001b[0m ${label}${detail ? `, ${detail}` : ""}`);
     failed++;
-    failures.push(`${label}${detail ? ` — ${detail}` : ""}`);
+    failures.push(`${label}${detail ? `, ${detail}` : ""}`);
   }
 }
 
@@ -243,6 +245,71 @@ group("resolveMetadataTemplate", () => {
   );
   check("missing surfaceVersion → 'unknown'", missingContext.x === "unknown");
   check("missing workspaceName → 'unknown'", missingContext.y === "unknown");
+});
+
+// ---------- resolveSignedMode ----------
+group("resolveSignedMode", () => {
+  check(
+    "no override (null) → returns preference (false)",
+    resolveSignedMode(false, null) === false,
+  );
+  check(
+    "no override (null) → returns preference (true)",
+    resolveSignedMode(true, null) === true,
+  );
+  check(
+    "no override (undefined) → returns preference",
+    resolveSignedMode(true, undefined) === true,
+  );
+  check(
+    "override=true wins over preference=false",
+    resolveSignedMode(false, true) === true,
+  );
+  check(
+    "override=false wins over preference=true",
+    resolveSignedMode(true, false) === false,
+  );
+});
+
+// ---------- resolveVariant ----------
+group("resolveVariant", () => {
+  check(
+    "all empty → '/public'",
+    resolveVariant({}) === "/public",
+  );
+  check(
+    "only preference → uses preference, slash prepended",
+    resolveVariant({ preference: "hero" }) === "/hero",
+  );
+  check(
+    "preference with leading slash → unchanged",
+    resolveVariant({ preference: "/hero" }) === "/hero",
+  );
+  check(
+    "stored beats preference",
+    resolveVariant({ stored: "thumb", preference: "hero" }) === "/thumb",
+  );
+  check(
+    "override beats stored and preference",
+    resolveVariant({ override: "card", stored: "thumb", preference: "hero" }) ===
+      "/card",
+  );
+  check(
+    "whitespace-only override falls through to stored",
+    resolveVariant({ override: "   ", stored: "thumb" }) === "/thumb",
+  );
+  check(
+    "empty-string stored falls through to preference",
+    resolveVariant({ stored: "", preference: "hero" }) === "/hero",
+  );
+  check(
+    "null override falls through to preference",
+    resolveVariant({ override: null, preference: "hero" }) === "/hero",
+  );
+  check(
+    "trims whitespace around picked value",
+    resolveVariant({ override: "  /hero  " }) === "/hero",
+  );
 });
 
 // ---------- Summary ----------

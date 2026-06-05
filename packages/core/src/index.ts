@@ -17,6 +17,9 @@ export { buildDeliveryUrl } from "./url-builder.js";
 
 export { resolveMetadataTemplate } from "./metadata.js";
 
+export { resolveSignedMode, resolveVariant } from "./resolve.js";
+export type { UploadOverrides } from "./resolve.js";
+
 export {
   compressImageIfNeeded,
   convertAvifIfNeeded,
